@@ -33,11 +33,6 @@ def main():
             # The flashcards are based on context purely (use trgText and srcText for the word itself)
             q, a = result.get("trgContext", None), result.get("srcContext", None)
 
-            # If i == 1, we flip question/answer for the second language pair
-            # (for instance if the user is toggling between en->ru and ru->en)
-            if i == 1:
-                q, a = a, q
-
             if q and a:
                 print(html.unescape(q).replace('em', 'strong'), end='\t')
                 print(html.unescape(a).replace('em', 'strong'))
