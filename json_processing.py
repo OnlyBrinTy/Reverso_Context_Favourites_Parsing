@@ -22,7 +22,8 @@ def main():
     print()
     user_choice = input(' ---> ')
 
-    lang_pairs = LANGUAGE_PAIRS[CHOICE2IDX[user_choice]]
+    lang = CHOICE2IDX[user_choice]
+    lang_pairs = LANGUAGE_PAIRS[lang]
     for i, res in enumerate(scrape_flashcards(lang_pairs)):
         json_res = json.loads(res)
 
@@ -31,11 +32,18 @@ def main():
 
         for result in results:
             # The flashcards are based on context purely (use trgText and srcText for the word itself)
-            q, a = result.get("trgContext", None), result.get("srcContext", None)
+            q_c, a_c = result.get("trgContext", ''), result.get("srcContext", '')
+            q_t, a_t = result.get("trgText", ''), result.get("srcText", '')
 
-            if q and a:
-                print(html.unescape(q).replace('em', 'strong'), end='\t')
-                print(html.unescape(a).replace('em', 'strong'))
+            if lang == 1 and result.get("trgLang", None) == 'en' or lang == 2 and result.get("trgLang", None) == 'nl':
+                q_c, a_c = a_c, q_c
+                q_t, a_t = a_t, q_t
+
+            q = q_c if q_c else q_t
+            a = a_c if a_c else a_t
+
+            print(html.unescape(q).replace('em>', 'strong>'), end='\t')
+            print(html.unescape(a).replace('em>', 'strong>'))
 
 
 if __name__ == '__main__':
